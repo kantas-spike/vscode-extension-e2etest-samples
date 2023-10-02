@@ -12,10 +12,18 @@
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "spike-playwright.helloWorld",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "spike-playwright.helloWorld",
+        "category": "spike playwright",
+        "title": "Hello World"
+      },
+      {
+        "command": "spike-playwright.helloInput",
+        "category": "spike playwright",
+        "title": "Hello Input"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

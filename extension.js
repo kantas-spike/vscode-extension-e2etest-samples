@@ -14,17 +14,16 @@ function activate(context) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "spike-playwright" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('spike-playwright.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
+	context.subscriptions.push(vscode.commands.registerCommand('spike-playwright.helloWorld', function () {
 		vscode.window.showInformationMessage('Hello World from spike-playwright!');
-	});
+	}));
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(vscode.commands.registerCommand('spike-playwright.helloInput', async function () {
+		const result = await vscode.window.showInputBox({
+			placeHolder: 'For example: data',
+		});
+		vscode.window.showInformationMessage(`quick input: ${result}`);
+	}));
 }
 
 // This method is called when your extension is deactivated
