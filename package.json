@@ -32,7 +32,6 @@
     "e2etest": "npx mocha e2e_test "
   },
   "devDependencies": {
-    "@playwright/test": "^1.38.1",
     "@types/mocha": "^10.0.2",
     "@types/node": "18.x",
     "@types/vscode": "^1.82.0",

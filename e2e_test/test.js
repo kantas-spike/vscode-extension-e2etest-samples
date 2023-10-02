@@ -2,7 +2,7 @@ const path = require("path");
 const os = require("os");
 
 const { downloadAndUnzipVSCode } = require("@vscode/test-electron");
-const { _electron } = require("@playwright/test");
+const { _electron } = require("playwright");
 
 const extensionDevelopmentPath = path.resolve(__dirname, "../");
 
