@@ -5,6 +5,14 @@ const vscode = require('vscode');
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
+const hoge = (val) => {
+  if (val) {
+    console.log(`hoge!!: ${val}`)
+  } else {
+    console.log(`hoge!!`)
+  }
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -16,6 +24,7 @@ function activate(context) {
 
 	context.subscriptions.push(vscode.commands.registerCommand('spike-playwright.helloWorld', function () {
 		vscode.window.showInformationMessage('Hello World from spike-playwright!');
+    hoge()
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('spike-playwright.helloInput', async function () {
@@ -23,6 +32,7 @@ function activate(context) {
 			placeHolder: 'For example: data',
 		});
 		vscode.window.showInformationMessage(`quick input: ${result}`);
+    hoge(result)
 	}));
 }
 
