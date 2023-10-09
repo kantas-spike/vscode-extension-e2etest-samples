@@ -1,6 +1,6 @@
 # vscode-extension-e2etest-samples
 
-vscode 拡張機能のE2Eテストのサンプルです。
+vscode 拡張機能の E2E テストのサンプルです。
 
 vscode 拡張機能のテストで、コマンドパレットや`Quick Pick`利用時に自動でユーザー入力したいです。
 
@@ -66,9 +66,9 @@ cp -r ./test/suite ./e2e_test
 ```
 
 次に、E2E テストは時間がかかるので、[e2e_test/suite/index.js](e2e_test/suite/index.js)のタイムアウト設定を変更します。
-`mocha`ではテストのタイムアウト閾値は`2000`ms になっているようです。
+`mocha`ではテストのデフォルトタイムアウト閾値は`2000`ms になっているようです。
 
-今回は、以下のように、`timeout: 0`を無効化しています。[^1]
+今回は、以下のように、`timeout: 0`として、タイムアウトを無効化しています。[^1]
 
 ```js
 // e2e_test/suite/index.js
@@ -114,7 +114,9 @@ run();
 
 ### テスト対象の確認
 
-まずは、テスト対象の拡張機能をみてみましょう。[extension.js](extension.js)
+まずは、テスト対象の拡張機能をみてみましょう。
+
+詳細は、[extension.js](extension.js)を参照してください。
 
 以下の 2 つのコマンドを登録されています。
 
@@ -166,12 +168,15 @@ run();
 
 次にキーボード(`await window.keyboard.type("helloWorld", { delay: 100 });`など)を使って、コマンドパレットからコマンドを選択・実行しています。
 
-注意点としては、各画面操作の前後で`await window.waitForTimeout(ミリ秒);`を指定する必要があります。指定しないと画面が変化する前の操作になってしまう場合があり、うまくテストができません。
+注意点としては、各画面操作の前後で`await window.waitForTimeout(ミリ秒);`を指定する必要があります。
+
+指定しないと画面が変化する前に、操作してしまう場合があり、うまくテストができません。
 
 最後に、通知を取得するために、`awit window.locator(".notification-toast-container .monaco-list-row").first();`を使用し、取得した通知内の文字列を検証しています。
+
 ここが難しいです。`vscode`の UI 部品がどのような CSS でマークアップされているかを知っている必要があります。
 
-UI 部品の CSS については[Notification · redhat-developer/vscode-extension-tester Wiki](https://github.com/redhat-developer/vscode-extension-tester/wiki/Notification)を参考にしています。[^2]
+通知の UI 部品の CSS については[Notification · redhat-developer/vscode-extension-tester Wiki](https://github.com/redhat-developer/vscode-extension-tester/wiki/Notification)を参考にしています。[^2]
 
 ```js
 const path = require("path");
@@ -280,16 +285,16 @@ node ./e2e_test/suite
 
 また、`package.json`に`e2etest`を定義し、
 
-~~~json
+```json
 {
   // ...略...
   "scripts": {
     // ...略...
     "e2etest": "node ./e2e_test/suite"
-  },
+  }
   // ...略...
 }
-~~~
+```
 
 以下によりテストを実行することもできます。
 
@@ -307,13 +312,11 @@ npm run e2etest
   "configurations": [
     // ... 略 ...
     {
-        "name": "e2e test",
-        "program": "${workspaceFolder}/e2e_test/suite/index.js",
-        "request": "launch",
-        "skipFiles": [
-            "<node_internals>/**"
-        ],
-        "type": "node"
+      "name": "e2e test",
+      "program": "${workspaceFolder}/e2e_test/suite/index.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
     }
   ]
 }
@@ -330,8 +333,6 @@ npm install -D c8
 ```
 
 [.c8rc.json](.c8rc.json)のような設定ファイルを作成し、以下を実行します。
-
-`./coverage/index.html`を開くと詳細なカバレッジレポートを確認できます。
 
 ```shell
 % npx c8 node ./e2e_test/suite
@@ -358,6 +359,8 @@ All files     |     100 |      100 |     100 |     100 |
  extension.js |     100 |      100 |     100 |     100 |
 --------------|---------|----------|---------|---------|-------------------
 ```
+
+`./coverage/index.html`を開くと詳細なカバレッジレポートを確認できます。
 
 ## 参考
 
