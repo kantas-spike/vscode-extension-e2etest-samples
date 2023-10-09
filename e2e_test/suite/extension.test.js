@@ -1,5 +1,6 @@
 const path = require("path");
 const os = require("os");
+var assert = require("assert");
 
 const { downloadAndUnzipVSCode } = require("@vscode/test-electron");
 const { _electron } = require("playwright");
@@ -20,42 +21,28 @@ const args = [
   os.tmpdir(),
 ];
 
-var assert = require("assert");
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-// const vscode = require('vscode');
-// const myExtension = require('../extension');
-let electronApp;
-suite('Extension Test Suite', function() {
-
-  suiteSetup('suite setup', () => {
-    console.log('suite setup')
-  })
-
-  suiteTeardown('suite teardown', () => {
-    console.log('suite teadown')
-  })
-
-  setup('setup', async () => {
-    console.log("setup")
+suite("Extension Test Suite", function () {
+  let electronApp;
+  setup("vscodeをplaywriteで起動", async function () {
+    console.log(this.test.title);
     const vscodeExecutablePath = await downloadAndUnzipVSCode();
     electronApp = await _electron.launch({
       executablePath: vscodeExecutablePath,
       args,
     });
-  })
+  });
 
-  teardown('teardown', () => {
-    console.log("teardown")
+  teardown("起動したvscodeを終了", function () {
+    console.log(this.test.title);
     electronApp.close();
-  })
+  });
 
-	// vscode.window.showInformationMessage('Start all tests.');
-
-	test('コマンドパレットからhelloworld実行', async () => {
+  test("コマンドパレットからhelloworld実行", async () => {
+    // arrange?
     const window = await electronApp.firstWindow();
     await window.waitForTimeout(5000);
+
+    // act?
     await window.keyboard.press("Shift+Meta+P");
     await window.waitForTimeout(5000);
     await window.keyboard.type("helloWorld", { delay: 100 });
@@ -63,19 +50,24 @@ suite('Extension Test Suite', function() {
     await window.waitForTimeout(1000);
     await window.keyboard.press("Enter");
     await window.waitForTimeout(5000);
-    // const notifications = await window.locator("")
-    //const list = await window.getByText('Hello World from').all()
-    const notification = await window.locator(".notification-toast-container .monaco-list-row").first()
-    assert.ok(notification)
-    assert.strictEqual("Hello World from spike-playwright!", await notification.innerText())
 
-    await window.waitForTimeout(5000);
-	});
+    // assert?
+    const notification = await window
+      .locator(".notification-toast-container .monaco-list-row")
+      .first();
+    assert.ok(notification);
+    assert.strictEqual(
+      "Hello World from spike-playwright!",
+      await notification.innerText()
+    );
+  });
 
-  test('コマンドパレットからHelloInput実行', async () => {
+  test("コマンドパレットからHelloInput実行", async () => {
+    // arrange?
     const window = await electronApp.firstWindow();
-
     await window.waitForTimeout(1000);
+
+    // act?
     await window.keyboard.press("Shift+Meta+P");
     await window.waitForTimeout(3000);
     await window.keyboard.type("spike hello input", { delay: 100 });
@@ -88,10 +80,15 @@ suite('Extension Test Suite', function() {
     await window.waitForTimeout(1000);
     await window.keyboard.press("Enter");
     await window.waitForTimeout(5000);
-    const notification = await window.locator(".notification-toast-container .monaco-list-row").first()
-    assert.ok(notification)
-    assert.strictEqual("quick input: 入力テストです。", await notification.innerText())
-	});
 
-
+    // assert?
+    const notification = await window
+      .locator(".notification-toast-container .monaco-list-row")
+      .first();
+    assert.ok(notification);
+    assert.strictEqual(
+      "quick input: 入力テストです。",
+      await notification.innerText()
+    );
+  });
 });
